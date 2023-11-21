@@ -1,72 +1,63 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const categorySelect = document.getElementById("category-select");
- 
-    categorySelect.addEventListener("change", filtermountainsArray)
-    
-    displayMountains(mountainsArray);
-})
+"use strict";
 
-function filterMountains() {
-    const category = document.getElementById("category-select").value
+window.onload = init;
 
-    
-    let filteredMountainsArray = Mountains;
-    {  
-        filteredMountainsArray = Mountains.filter(p => p.category == category);
-    }
-    
-    displayMountains(filteredMountainsArray);
+function init() {
+    addMountainsDropdown();
+    displayMountains();
 }
 
-function displayMountains(mountainsArray) {
+function addMountainsDropdown() {
+    const mountainsDropdown = document.getElementById("mountainsDropdown");
 
-    const mountainsContainer = document.querySelector("#content")
-    
-    mountainsContainer.innerHTML = "";
-
-    mountain.forEach(mountainsArray => {
-
-        displayMountains(mountainsArray, mountainsContainerContainer)
-        
+    mountainsArray.forEach(mountain => {
+        const option = document.createElement("option");
+        option.value = mountain.name;
+        option.text = mountain.name;
+        mountainsDropdown.appendChild(option);
     });
+
+    let button = document.getElementById("button");
+    button.onclick = findMountain;
 }
 
-function displayProduct(product, parentDiv) {
+function findMountain() {
+    const mountainsDropdown = document.getElementById("mountainsDropdown");
+    const selectedMountain = mountainsDropdown.value;
 
-    const productDiv = document.createElement("div");
-    productDiv.classList.add("product") ;
-    productDiv.id = "product-" + product.productId ;
-    
-    parentDiv.appendChild(productDiv);
+    const selectedMountainData = mountainsArray.find(mountain => mountain.name === selectedMountain);
 
-    addProductHeader(product, productDiv);
-    addImageRow(product, productDiv);
-    addDescription(product, productDiv);
-    addCartButton(product, productDiv);
+    let message = "";
+    message += `
+    <div class="card my-3" style="width:23rem; height:80vh;">
+        <div class="card-body">
+            <img class="photos for mountains" src="images/${selectedMountainData.img}"></img>
+            <h5 class="card-title">${selectedMountainData.name}</h5>
+            <p class="card-text">Description: ${selectedMountainData.desc}</p>
+            <p class="card-text">Elevation: ${selectedMountainData.elevation}</p>
+            <p class="card-text">Effort: ${selectedMountainData.effort}</p>
+            <p class="card-text">Coordinates:</p>
+            <p class="card-text">Latitude: ${selectedMountainData.coords.lat}</p>
+            <p class="card-text">Longitude: ${selectedMountainData.coords.lng}</p>
+        </div>
+    </div>`;
+
+    document.getElementById("output").innerHTML = message;
 }
 
-function addProductHeader(product, productDiv) {
-    
+function displayMountains() {
+    let message = "";
+    mountainsArray.forEach(mountain => {
+        message += `
+        <div class="card my-3" style="width: 100%;">
+            <div class="card-body">
+                <img src="images/${mountain.img}" class="card-img-top" alt="${mountain.name}">
+                <h5 class="card-title">${mountain.name}</h5>
+                <p class="card-text">Description: ${mountain.desc}</p>
+                <p class="card-text">Elevation: ${mountain.elevation}</p>
+            </div>
+        </div>`;
+    });
 
-
-    const productInfoDiv = document.createElement("div");
-    productDiv.appendChild(productInfoDiv);
-
-
-    const productHeader = document.createElement("h4")
-    productHeader.innerText = product.name;
-    productInfoDiv.appendChild(productHeader);
+    document.getElementById("output").innerHTML = message;
 }
-
-function addImageRow(product, parent) {
-
-    const imageRow = document.createElement("div");
-    imageRow.classList.add("photo")
-    parent.appendChild(imageRow)
-
-    const img = document.createElement("img");
-    img.src = "images/products/" + product.imageUrl
-    imageRow.appendChild(img)
-
-}
-  
